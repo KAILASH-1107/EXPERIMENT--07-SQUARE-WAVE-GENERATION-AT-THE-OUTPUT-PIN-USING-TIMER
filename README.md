@@ -97,38 +97,229 @@ Step14. click on debug and simulate using simulation as shown below
 
 ## STM 32 CUBE PROGRAM :
 
+````
+#include "main.h"
+TIM_HandleTypeDef htim2;
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_TIM2_Init(void);
+tval int  
+int main(void)
+{
+  HAL_Init();
+  SystemClock_Config();
+  MX_GPIO_Init();
+  MX_TIM2_Init();
+  HAL_TIM_Base_Start(&htim2);
+  HAL_TIM_PWM_Init(&htim2);
+  HAL_TIM_PWM_Start(&htim2,TIM_CHANNEL_1);
 
+
+/
+  while (1)
+  {
+  
+  }
+  
+}
+
+
+void SystemClock_Config(void)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+
+  
+  __HAL_RCC_PWR_CLK_ENABLE();
+  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE2);
+  
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+  {
+    Error_Handler();
+  }
+ 
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+                              |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+static void MX_TIM2_Init(void)
+{
+
+  
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+
+ 
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 0;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 10000;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 5000;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  
+  HAL_TIM_MspPostInit(&htim2);
+
+}
+static void MX_GPIO_Init(void)
+{
+
+ 
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+
+}
+void Error_Handler(void)
+{
+  
+  __disable_irq();
+  while (1)
+  {
+  }
+  
+}
+void assert_failed(uint8_t *file, uint32_t line)
+{
+  
+}
+
+````
 
 
 
 ## Output screen shots of proteus  :
+ <img width="1920" height="1080" alt="Screenshot (240)" src="https://github.com/user-attachments/assets/2d976aec-09be-4e55-b162-6ca39d07beee" />
  
- 
+
  ## CIRCUIT DIAGRAM (EXPORT THE GRAPHICS TO PDF AND ADD THE SCREEN SHOT HERE): 
+ <img width="1920" height="1080" alt="Screenshot (238)" src="https://github.com/user-attachments/assets/9eefeedf-ae38-4d02-b96a-e23a2b61c1ca" />
+
+  <img width="1920" height="1080" alt="Screenshot (239)" src="https://github.com/user-attachments/assets/c7543517-acc6-41a3-b2fc-a7fddc7b7bbd" />
+
+
+ <img width="1920" height="1080" alt="Screenshot (241)" src="https://github.com/user-attachments/assets/f5491200-fa54-4c5e-9eb6-8ced0fc29d59" />
+ <img width="1920" height="1080" alt="Screenshot (242)" src="https://github.com/user-attachments/assets/aa9f5cc7-abdd-44f4-93ec-234477cecafc" />
+ <img width="1175" height="980" alt="Screenshot 2026-08-24 141835" src="https://github.com/user-attachments/assets/cabd7b8d-4397-4fad-88bf-2a20da27bdcf" />
+
+
+
  
 
 ## DUTY CYCLE AND FREQUENCY CALCULATION 
-FOR PULSE AT 500
+FOR PULSE AT 5000
+TON = 1.55 × 0.2 = 0.31 ms
 
-TON = 
-TOFF=
-TOTAL TIME = 
-FREQUENCY = 1/(TOTAL TIME)
+TOFF = 1.55 × 0.2 = 0.31 ms
 
-FOR PULSE AT 700
+Total Time = TON + TOFF = 0.31 + 0.31 = 0.62 ms = 0.62 × 10⁻³ sec
 
-TON = 
-TOFF=
-TOTAL TIME = 
-FREQUENCY = 1/(TOTAL TIME)
+Frequency = 1 / Total Time
 
+= 1 / (0.62 × 10⁻³)
 
-FOR PULSE AT 900
+= 1.6129 × 10³ Hz
 
-TON = 
-TOFF=
-TOTAL TIME = 
-FREQUENCY = 1/(TOTAL TIME)
+= 1.6 kHz
+
+Duty Ratio = TON / (TON + TOFF)
+
+= 0.31 / 0.62
+
+= 0.5
+
+FOR PULSE AT 7000
+TON = 2.2 × 0.2 = 0.44 ms
+
+TOFF = 0.9 × 0.2 = 0.18 ms
+
+Total Time = TON + TOFF
+
+= 0.44 + 0.18
+
+= 0.62 ms
+
+= 0.62 × 10⁻³ sec
+
+Frequency = 1 / Total Time
+
+= 1 / (0.62 × 10⁻³)
+
+= 1.6129 × 10³ Hz
+
+= 1.6 kHz
+
+Duty Ratio = TON / (TON + TOFF)
+
+= 0.44 / 0.62
+
+= 0.71
+
+FOR PULSE AT 9000
+TON = 2.8 × 0.2 = 0.56 ms
+
+TOFF = 0.3 × 0.2 = 0.06 ms
+
+Total Time = TON + TOFF
+
+= 0.56 + 0.06
+
+= 0.62 ms
+
+= 0.62 × 10⁻³ sec
+
+Frequency = 1 / Total Time
+
+= 1 / (0.62 × 10⁻³)
+
+= 1.6129 × 10³ Hz
+
+= 1.6 kHz
+
+Duty Ratio = TON / (TON + TOFF)
+
+= 0.56 / 0.62
+
+= 0.90
 
 
 ## Result :
