@@ -130,7 +130,8 @@ int main(void)
 
 
 ## Output screen shots of proteus  :
- <img width="1920" height="1080" alt="Screenshot (240)" src="https://github.com/user-attachments/assets/2d976aec-09be-4e55-b162-6ca39d07beee" />
+<img width="1670" height="942" alt="ChatGPT Image Sep 1, 2026, 08_30_08 AM" src="https://github.com/user-attachments/assets/2bef274d-9e56-4e1c-8d2a-bf655cd40a8e" />
+
  
 
  ## CIRCUIT DIAGRAM (EXPORT THE GRAPHICS TO PDF AND ADD THE SCREEN SHOT HERE): 
